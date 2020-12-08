@@ -2,6 +2,9 @@
 
 ### Journal papers
 
+**Krukar, J.**, Manivannan, Ch., Bhatt, M., Schultz, C. (2020). Embodied 3D isovists: A method to model the visual perception of space. *Environment and Planning B: Urban Analytics and City Science, 2399808320974533. doi: 10.1177/2399808320974533*
+[[pdf]](krukar-embodied3disovists.pdf)
+
 **Krukar, J.**, Anacta, V. J., & Schwering, A. (2020). The effect of orientation instructions on the recall and reuse of route and survey elements in wayfinding descriptions. *Journal of Environmental Psychology, 68, 101407. doi: 10.1016/j.jenvp.2020.101407*
 [[pdf]](pdfs/Krukar%2C%20Anacta%2C%20Schwering%20-%202020%20-%20The%20effect%20of%20orientation%20instructions%20on%20the%20recall%20and%20reuse%20of%20route%20and%20survey%20elements%20in%20wayfin.pdf)
 
