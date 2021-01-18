@@ -9,7 +9,7 @@
 Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (in press). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing.*
 
 Galvao, M., **Krukar, J.**, Noellenburg, M., & Schwering, A. (2020). Route schematization with landmarks. *Journal of Spatial Information Science, 21. doi: 10.5311/JOSIS.2020.21.589*
-[[pdf]](pdfs/Galvão et al. - 2020 - Route schematization with landmarks.pdf)
+[[pdf]](pdfs/Galvão%20et%20al.%20-%202020%20-%20Route%20schematization%20with%20landmarks.pdf)
 
 **Krukar, J.**, Anacta, V. J., & Schwering, A. (2020). The effect of orientation instructions on the recall and reuse of route and survey elements in wayfinding descriptions. *Journal of Environmental Psychology, 68, 101407. doi: 10.1016/j.jenvp.2020.101407*
 [[pdf]](pdfs/Krukar%2C%20Anacta%2C%20Schwering%20-%202020%20-%20The%20effect%20of%20orientation%20instructions%20on%20the%20recall%20and%20reuse%20of%20route%20and%20survey%20elements%20in%20wayfin.pdf)
