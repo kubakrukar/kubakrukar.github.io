@@ -60,6 +60,6 @@ In recent work, we have extended a popular architectural measure of visibility, 
 
 Key publications:
 
-* ["Towards Embodied 3D Isovists"](pdfs/Krukar%2C%20Schultz%2C%20Bhatt%20-%202017%20-%20Towards%20Embodied%203D%20Isovists.pdf)
+* ["Embodied 3D isovists: A method to model the visual perception of space"](pdfs/krukar-embodied3disovists.pdf)
 
 * ["Architectural Cognition and Behavior"](pdfs/Dalton%2C%20Krukar%2C%20Ho%CC%88lscher%20-%202018%20-%20Architectural%20cognition%20and%20behavior.pdf)
