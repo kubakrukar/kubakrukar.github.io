@@ -2,11 +2,12 @@
 
 ### Journal papers
 
-**Krukar, J.**, Manivannan, Ch., Bhatt, M., Schultz, C. (in press). Embodied 3D isovists: A method to model the visual perception of space. *Environment and Planning B: Urban Analytics and City Science. doi: 10.1177/2399808320974533*
+Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (2021). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing. doi: 10.1007/s10339-020-01011-4.*
+[[pdf]](pdfs/distance_perception.pdf)
+
+**Krukar, J.**, Manivannan, Ch., Bhatt, M., Schultz, C. (2020). Embodied 3D isovists: A method to model the visual perception of space. *Environment and Planning B: Urban Analytics and City Science. doi: 10.1177/2399808320974533*
 [[pdf]](pdfs/krukar-embodied3disovists.pdf)
 [[code and data]](https://osf.io/qvkwz/)
-
-Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (in press). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing.*
 
 Galvao, M., **Krukar, J.**, Noellenburg, M., & Schwering, A. (2020). Route schematization with landmarks. *Journal of Spatial Information Science, 21. doi: 10.5311/JOSIS.2020.21.589*
 [[pdf]](pdfs/Galvão%20et%20al.%20-%202020%20-%20Route%20schematization%20with%20landmarks.pdf)
