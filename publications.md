@@ -1,5 +1,7 @@
 ## Publications
 
+**Open Science statement.** My most recent first-author publications include an accompaning [Open Science repository](osf.io/9ruhs). I work on making older projects reproducible but it takes time. If you are interested in the material from any specific project, contact me and I commit to uploading data and runnable code within 2 weeks.
+
 ### Journal papers
 
 Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (2021). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing. doi: 10.1007/s10339-020-01011-4.*
