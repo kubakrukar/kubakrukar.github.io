@@ -1,12 +1,12 @@
 ## Publications
 
-> **Open Science statement.** My most recent first-author publications include an accompaning [Open Science Framework repository](https://osf.io/9ruhs). If you are interested in the material from any older project, contact me and I commit to uploading data and runnable code within 2 weeks.
+> **Open Science statement.** My most recent first-author publications include an accompaning [Open Science Framework (OSF) repository](https://osf.io/9ruhs). If you are interested in the material from any older project, contact me and I commit to uploading data and runnable code within 2 weeks.
 
 ### Journal papers
 
 Galvão, M., **Krukar, J.** & Schwering, A. (2021): Evaluating schematic route maps in wayfinding tasks for in-car navigation. *Cartography and Geographic Information Science. doi: 10.1080/15230406.2021.1943531*
 [[pdf]](pdfs/Evaluating_schematic2021.pdf)
-[[code and data]](https://osf.io/jv9wf/)
+[[OSF]](https://osf.io/jv9wf/)
 [[accompaning app]](https://osf.io/4epr6/)
 
 Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (2021). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing. doi: 10.1007/s10339-020-01011-4.*
@@ -14,7 +14,7 @@ Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (2021). The effect of naviga
 
 **Krukar, J.**, Manivannan, Ch., Bhatt, M., Schultz, C. (2020). Embodied 3D isovists: A method to model the visual perception of space. *Environment and Planning B: Urban Analytics and City Science. doi: 10.1177/2399808320974533*
 [[pdf]](pdfs/krukar-embodied3disovists.pdf)
-[[code and data]](https://osf.io/qvkwz/)
+[[OSF]](https://osf.io/qvkwz/)
 
 Galvao, M., **Krukar, J.**, Noellenburg, M., & Schwering, A. (2020). Route schematization with landmarks. *Journal of Spatial Information Science, 21. doi: 10.5311/JOSIS.2020.21.589*
 [[pdf]](pdfs/Galvão%20et%20al.%20-%202020%20-%20Route%20schematization%20with%20landmarks.pdf)
@@ -24,7 +24,7 @@ Galvao, M., **Krukar, J.**, Noellenburg, M., & Schwering, A. (2020). Route schem
 
 **Krukar, J.**, & Dalton, R. C. (2020). How the Visitors’ Cognitive Engagement Is Driven (but Not Dictated) by the Visibility and Co-visibility of Art Exhibits. *Frontiers in Psychology, 11. doi: 10.3389/fpsyg.2020.00350*
 [[pdf]](pdfs/fpsyg-11-00350.pdf)
-[[data]](https://osf.io/d6mwe/)
+[[OSF]](https://osf.io/d6mwe/)
 
 Loewen, H., **Krukar, J.**, & Schwering, A. (2019). Spatial Learning with Orientation Maps: The Influence of Different Environmental Features on Spatial Knowledge Acquisition. *ISPRS International Journal of Geo-Information, 8(3), 149. doi: 10.3390/ijgi8030149*
 [[pdf]](pdfs/Lo%CC%88wen%2C%20Krukar%2C%20Schwering%20-%202019%20-%20Spatial%20Learning%20with%20Orientation%20Maps%20The%20Influence%20of%20Different%20Environmental%20Features%20on%20Spatial%20K.pdf)
@@ -66,7 +66,7 @@ Loewen, H., **Krukar, J.**, & Schwering, A. (2019). Functional Scales in Assiste
 
 **Krukar, J.**, Muenzer, S., Loerch, L., Anacta, V. J., Fuest, S., & Schwering, A. (2018). Distinguishing Sketch Map Types: A Flexible Feature-Based Classification. In *S. Creem-Regehr, J. Schoening, & A. Klippel (Eds.), Spatial Cognition XI (pp. 279–292). doi: 10.1007/978-3-319-96385-3_19*
 [[pdf]](pdfs/Krukar%20et%20al.%20-%202018%20-%20Distinguishing%20Sketch%20Map%20Types%20A%20Flexible%20Feature-Based%20Classification.pdf)
-[[supplement]](https://osf.io/3d97m/)
+[[OSF]](https://osf.io/3d97m/)
 
 **Krukar, J.**, Schwering, A., Loewen, H., Galvao, M., & Anacta, V. J. (2018). Rethinking Wayfinding Support Systems—Introduction. *In P. Fogliaroni, A. Bal- latore, & E. Clementini (Eds.), Proceedings of Workshops and Posters at the 13th International Conference on Spatial Information Theory (COSIT 2017) (pp. 151–152). doi: 10.1007/978-3-319-63946-8_29* (editorial to workshop proceedings)
 [[pdf]](pdfs/introCOSIT.pdf)
@@ -91,9 +91,11 @@ Padmanaban, R., & **Krukar, J.** (2017). Increasing the Density of Local Landmar
 
 ### Extended abstracts and posters
 
-**Krukar, J.**, Mavros, P., & Hoelscher, C. (2020). Towards capturing focal/ambient attention during dynamic wayfinding. *Symposium on Eye Tracking Research and Applications*, 1–5. doi: 10.1145/3379157.3391417[[pdf]](pdfs/Krukar%2C%20Mavros%2C%20Hoelscher%20-%202020%20-%20Towards%20capturing%20focal%20ambient%20attention%20during%20dynamic%20wayfinding.pdf)
+**Krukar, J.**, Mavros, P., & Hoelscher, C. (2020). Towards capturing focal/ambient attention during dynamic wayfinding. *Symposium on Eye Tracking Research and Applications*, 1–5. doi: 10.1145/3379157.3391417
+[[pdf]](pdfs/Krukar%2C%20Mavros%2C%20Hoelscher%20-%202020%20-%20Towards%20capturing%20focal%20ambient%20attention%20during%20dynamic%20wayfinding.pdf)
 
-Dalton, R., Dalton, N., Hoelscher, C., Veddeler, C., **Krukar, J.**, & Wiberg, M. (2020). HabiTech : Inhabiting Buildings, Data & Technology. *Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems*, 1–8. doi: 10.1145/3334480.3375179 [[pdf]](pdfs/SIGCHI-CHI2020-HabiTech.pdf)
+Dalton, R., Dalton, N., Hoelscher, C., Veddeler, C., **Krukar, J.**, & Wiberg, M. (2020). HabiTech : Inhabiting Buildings, Data & Technology. *Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems*, 1–8. doi: 10.1145/3334480.3375179
+[[pdf]](pdfs/SIGCHI-CHI2020-HabiTech.pdf)
 
 Schick, W., **Krukar, J.**, & Schwering, A. (2019). Functional verbal scales in route instructions of wayfinding assistance systems. *Speaking of Location (Workshop in conjunction with COSIT 2019). Regensburg, Germany.*
 [[pdf]](pdfs/Schick_COSIT2019_submitted.pdf)
@@ -138,4 +140,5 @@ Conroy Dalton, R. and **Krukar, J.** (2014; equal contribution). Augmenting Intu
 
 ### PhD Thesis
 
-**Krukar, J.** (2015). The Influence of an Art Gallery’s Spatial Layout on Human Attention to and Memory of Art Exhibits. *University of Northumbria at Newcastle, UK.* [[pdf]](pdfs/Krukar-PhD-revised-smallersize.pdf)
+**Krukar, J.** (2015). The Influence of an Art Gallery’s Spatial Layout on Human Attention to and Memory of Art Exhibits. *University of Northumbria at Newcastle, UK.* 
+[[pdf]](pdfs/Krukar-PhD-revised-smallersize.pdf)
