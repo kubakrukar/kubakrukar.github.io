@@ -1,6 +1,6 @@
 ## Publications
 
-> **Open Science statement.** My most recent first-author publications include an accompaning [Open Science repository](osf.io/9ruhs). I work on making older projects reproducible but it takes time. If you are interested in the material from any specific project, contact me and I commit to uploading data and runnable code within 2 weeks.
+> **Open Science statement.** My most recent first-author publications include an accompaning [Open Science repository](osf.io/9ruhs). If you are interested in the material from any older project, contact me and I commit to uploading data and runnable code within 2 weeks.
 
 ### Journal papers
 
