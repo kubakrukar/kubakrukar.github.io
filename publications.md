@@ -68,6 +68,7 @@ Loewen, H., **Krukar, J.**, & Schwering, A. (2019). Functional Scales in Assiste
 **Krukar, J.**, Muenzer, S., Loerch, L., Anacta, V. J., Fuest, S., & Schwering, A. (2018). Distinguishing Sketch Map Types: A Flexible Feature-Based Classification. In *S. Creem-Regehr, J. Schoening, & A. Klippel (Eds.), Spatial Cognition XI (pp. 279–292). doi: 10.1007/978-3-319-96385-3_19*
 [[pdf]](pdfs/Krukar%20et%20al.%20-%202018%20-%20Distinguishing%20Sketch%20Map%20Types%20A%20Flexible%20Feature-Based%20Classification.pdf)
 [[OSF]](https://osf.io/3d97m/)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kubakrukar/sketchmaptypes/HEAD?urlpath=rstudio)
 
 **Krukar, J.**, Schwering, A., Loewen, H., Galvao, M., & Anacta, V. J. (2018). Rethinking Wayfinding Support Systems—Introduction. *In P. Fogliaroni, A. Bal- latore, & E. Clementini (Eds.), Proceedings of Workshops and Posters at the 13th International Conference on Spatial Information Theory (COSIT 2017) (pp. 151–152). doi: 10.1007/978-3-319-63946-8_29* (editorial to workshop proceedings)
 [[pdf]](pdfs/introCOSIT.pdf)
