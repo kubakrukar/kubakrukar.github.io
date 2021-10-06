@@ -21,6 +21,7 @@ Galvao, M., **Krukar, J.**, Noellenburg, M., & Schwering, A. (2020). Route schem
 
 **Krukar, J.**, Anacta, V. J., & Schwering, A. (2020). The effect of orientation instructions on the recall and reuse of route and survey elements in wayfinding descriptions. *Journal of Environmental Psychology, 68, 101407. doi: 10.1016/j.jenvp.2020.101407*
 [[pdf]](pdfs/Krukar%2C%20Anacta%2C%20Schwering%20-%202020%20-%20The%20effect%20of%20orientation%20instructions%20on%20the%20recall%20and%20reuse%20of%20route%20and%20survey%20elements%20in%20wayfin.pdf)
+[[OSF]](https://doi.org/10.17605/OSF.IO/MKVFH)
 
 **Krukar, J.**, & Dalton, R. C. (2020). How the Visitors’ Cognitive Engagement Is Driven (but Not Dictated) by the Visibility and Co-visibility of Art Exhibits. *Frontiers in Psychology, 11. doi: 10.3389/fpsyg.2020.00350*
 [[pdf]](pdfs/fpsyg-11-00350.pdf)
