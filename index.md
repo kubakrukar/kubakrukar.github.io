@@ -10,7 +10,7 @@ For selected projects, see below.
 
 For a complete list of publications [click here](/publications). 
 
-My CV is available [here](/pdfs/cv.pdf).
+My CV is available [here](/pdfs/CV.pdf).
 
 ---
 
