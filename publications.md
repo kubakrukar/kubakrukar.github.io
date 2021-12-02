@@ -4,15 +4,15 @@
 
 ### Journal papers
 
-Galvão, M., **Krukar, J.** & Schwering, A. (2021): Evaluating schematic route maps in wayfinding tasks for in-car navigation. *Cartography and Geographic Information Science. doi: 10.1080/15230406.2021.1943531*
+Galvão, M. L., **Krukar, J.**, and Schwering, A. (2021). Evaluating schematic route maps in wayfinding tasks for in-car navigation. *Cartography and Geographic Information Science, 48(5), 449–469. doi: 10.1080/15230406.2021.1943531*
 [[pdf]](pdfs/Evaluating_schematic2021.pdf)
 [[OSF]](https://osf.io/jv9wf/)
 [[accompaning app]](https://osf.io/4epr6/)
 
-Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (2021). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing. doi: 10.1007/s10339-020-01011-4.*
+Li, H., Mavros, P., **Krukar, J.**, & Hoelscher, C. (2021). The effect of navigation method and visual display on distance perception and cognition in a large-scale virtual building. *Cognitive Processing, 1–21. doi: 10.1007/s10339-020-01011-4*
 [[pdf]](pdfs/distance_perception.pdf)
 
-**Krukar, J.**, Manivannan, Ch., Bhatt, M., Schultz, C. (2020). Embodied 3D isovists: A method to model the visual perception of space. *Environment and Planning B: Urban Analytics and City Science. doi: 10.1177/2399808320974533*
+**Krukar, J.**, Manivannan, Ch., Bhatt, M., Schultz, C. (2020). Embodied 3D isovists: A method to model the visual perception of space. *Environment and Planning B: Urban Analytics and City Science, 48(8), 2307–2325. doi: 10.1177/2399808320974533*
 [[pdf]](pdfs/krukar-embodied3disovists.pdf)
 [[OSF]](https://osf.io/qvkwz/)
 
@@ -92,6 +92,8 @@ Padmanaban, R., & **Krukar, J.** (2017). Increasing the Density of Local Landmar
 [[pdf]](pdfs/Krukar%2C%20Conroy%20Dalton%20-%202013%20-%20Walk%2C%20Look%2C%20Remember%20Art%20Galleries%20as%20Spaces%20Facilitating%20Memory.pdf)
 
 ### Extended abstracts and posters
+
+Schwering, A., and **Krukar, J.** (2021). A landmark’s role in spatial learning depends on its spatial extent. *Cognitive Processing, 22, 28–28.*
 
 **Krukar, J.**, Mavros, P., & Hoelscher, C. (2020). Towards capturing focal/ambient attention during dynamic wayfinding. *Symposium on Eye Tracking Research and Applications*, 1–5. doi: 10.1145/3379157.3391417
 [[pdf]](pdfs/Krukar%2C%20Mavros%2C%20Hoelscher%20-%202020%20-%20Towards%20capturing%20focal%20ambient%20attention%20during%20dynamic%20wayfinding.pdf)
