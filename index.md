@@ -14,6 +14,22 @@ My CV is available [here](/pdfs/cv.pdf).
 
 ---
 
+## Architectural Cognition
+
+I am interested in how psychology can aid architecture in improving the usability of buildings. I study how space 'guides' our behaviour, our attention, and our thinking. I design formal measures for architectural computation that are grounded in the cognitive experience of space.
+
+![Architectural Cognition](/images/arch.jpg)
+
+In recent work, we have extended a popular architectural measure of visibility, called an "isovist", from 2-D to 3-D environments. We demonstrated that our measure better predicts how "spacious" and "complex" a building feels to a human occupant, compared to the previously available methods.
+
+Key publications:
+
+* ["Embodied 3D isovists: A method to model the visual perception of space"](pdfs/krukar-embodied3disovists.pdf)
+
+* ["Architectural Cognition and Behavior"](pdfs/Dalton%2C%20Krukar%2C%20Ho%CC%88lscher%20-%202018%20-%20Architectural%20cognition%20and%20behavior.pdf)
+
+---
+
 ## Wayfinding Through Orientation
 
 Traditional wayfinding devices use turn-by-turn instructions such as 'turn left' or 'continue for 300 m'. These are easy to follow but leave us disoriented. They don’t correspond to how we would describe any route to other people. Can different types of navigation instructions help us learn the environment *while* we navigate?
@@ -48,18 +64,3 @@ Key publications:
 
 * [[My PhD Thesis]](pdfs/Krukar-PhD-revised-smallersize.pdf)
 
----
-
-## Architectural Cognition
-
-I am interested in how psychology can aid architecture in improving the usability of buildings. I study how space 'guides' our behaviour, our attention, and our thinking. I design formal measures for architectural computation that are grounded in the cognitive experience of space.
-
-![Architectural Cognition](/images/arch.jpg)
-
-In recent work, we have extended a popular architectural measure of visibility, called an "isovist", from 2-D to 3-D environments. We demonstrated that our measure better predicts how "spacious" and "complex" a building feels to a human occupant, compared to the previously available methods.
-
-Key publications:
-
-* ["Embodied 3D isovists: A method to model the visual perception of space"](pdfs/krukar-embodied3disovists.pdf)
-
-* ["Architectural Cognition and Behavior"](pdfs/Dalton%2C%20Krukar%2C%20Ho%CC%88lscher%20-%202018%20-%20Architectural%20cognition%20and%20behavior.pdf)
