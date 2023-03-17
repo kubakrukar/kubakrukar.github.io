@@ -4,6 +4,17 @@
 
 ### Journal papers
 
+**Krukar, J.**, Navas Medrano, S., & Schwering, A. (2023). Route effects in city-based survey knowledge estimates. Cognitive Processing. https://doi.org/10.1007/s10339-022-01122-0
+[[pdf]](https://www.tandfonline.com/doi/pdf/10.1080/13875868.2023.2170802?download=true)
+[[OSF]](https://doi.org/10.17605/OSF.IO/8MNZV)
+
+**Krukar, J.**, van Eek, A., & Schwering, A. (2023). Task-dependent sketch maps. *Spatial Cognition & Computation, https://doi.org/10.1080/13875868.2023.2170802*
+[[pdf]](https://link.springer.com/content/pdf/10.1007/s10339-022-01122-0.pdf?pdf=button)
+[[osf]](https://doi.org/10.17605/OSF.IO/X8WMG)
+
+Manivannan, C., **Krukar, J.**, & Schwering, A. (2022). Spatial generalization in sketch maps: A systematic classification. *Journal of Environmental Psychology, 101851. https://doi.org/10.1016/j.jenvp.2022.101851*
+[[pdf]](https://www.sciencedirect.com/science/article/pii/S0272494422000962/pdfft?isDTMRedir=true&download=true)
+
 Galvão, M. L., **Krukar, J.**, and Schwering, A. (2021). Evaluating schematic route maps in wayfinding tasks for in-car navigation. *Cartography and Geographic Information Science, 48(5), 449–469. doi: 10.1080/15230406.2021.1943531*
 [[pdf]](pdfs/Evaluating_schematic2021.pdf)
 [[OSF]](https://osf.io/jv9wf/)
@@ -58,6 +69,9 @@ Dalton, R. C., **Krukar, J.**, & Hoelscher, C. (2018). Architectural cognition a
 [[pdf]](pdfs/Krukar_ConroyDalton_Hoelscher.pdf)
 
 ### Peer-reviewed conference proceedings
+
+Kim, K. G., **Krukar, J.**, Mavros, P., Zhao, J., Kiefer, P., Schwering, A., Hölscher, C., & Raubal, M. (2022). 3D Sketch Maps: Concept, Potential Benefits, and Challenges. In T. Ishikawa, S. I. Fabrikant, & S. Winter (Eds.), 15th International Conference on Spatial Information Theory (COSIT 2022) (Vol. 240, p. 14:1-14:7). Schloss Dagstuhl – Leibniz-Zentrum für Informatik. https://doi.org/10.4230/LIPIcs.COSIT.2022.14
+[[pdf]]()
 
 Loewen, H., **Krukar, J.**, & Schwering, A. (2019). Functional Scales in Assisted Wayfinding. In *S. Timpf, C. Schlieder, M. Kattenbeck, B. Ludwig, & K. Stewart (Eds.), Proceedings of the 14th International Conference on Spatial Information Theory (COSIT 2019) (Vol. 142, pp. 3:1-3:7). doi: 10.4230/LIPIcs.COSIT.2019.3*
 [[pdf]](pdfs/Lo%CC%88wen%2C%20Krukar%2C%20Schwering%20-%202019%20-%20Functional%20Scales%20in%20Assisted%20Wayfinding.pdf)
