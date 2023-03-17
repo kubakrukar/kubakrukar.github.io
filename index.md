@@ -8,7 +8,7 @@ My background and approach are interdisciplinary, with an MA in psychology, a Ph
 
 For selected projects, see below. 
 
-For a complete list of publications [click here](/publications). 
+For a complete list of publications [click here](/pdfs/publications.pdf). 
 
 My CV is available [here](/pdfs/cv.pdf).
 
