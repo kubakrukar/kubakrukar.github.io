@@ -2,7 +2,7 @@
 
 ## Biosketch
 
-I am a researcher and lecturer in spatial cognition - a branch of cognitive science studying how people think *about*, think *in*, and think *with* space.
+I am a Junior Professor in Spatial Cognition - a branch of cognitive science studying how people think *about*, think *in*, and think *with* space.
 
 My background and approach are interdisciplinary, with an MA in psychology, a PhD from a department of architecture, and postdoctoral experience in geoinformatics. I apply cognitive psychology methods in the fields of geoinformatics, architecture, and human-computer interaction.
 
