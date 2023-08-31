@@ -1,7 +1,12 @@
 Jakub Krukar
+<<<<<<< HEAD
 logo: 
   '/images/1.png'
 description:
+=======
+logo: "/images/1.png?raw=true" # your photo (or logo) here
+description: > # your text below (remove <br> elements if you don't need line breaks)
+>>>>>>> parent of 93c3070 (?raw=true)
   Junior Professor in Spatial Cognition
   <br>
   <a href="https://ifgi.uni-muenster.de">Institute for Geoinformatics, 
