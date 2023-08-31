@@ -4,19 +4,19 @@
 
 I am a Junior Professor in Spatial Cognition - a branch of cognitive science studying how people think *about*, think *in*, and think *with* space.
 
-My background and approach are interdisciplinary, with an MA in psychology, a PhD from a department of architecture, and postdoctoral experience in geoinformatics. I apply cognitive psychology methods in the fields of geoinformatics, architecture, and human-computer interaction.
+My background and approach are interdisciplinary, with an MA in psychology, a PhD from a department of architecture, and postdoctoral experience in geoinformatics. Methods I work with include virtual reality, mobile eye-tracking, spatial computation, Bayesian statistics, and architectural theory of Space Syntax.
+
+I am based at the [Institute for Geoinformatics](https://www.uni-muenster.de/Geoinformatics/en/index.html) in Münster, Germany. Prior to that I was at [Northumbria University](https://www.northumbria.ac.uk) in Newcastle, UK and as a Visiting Fellow at [Future Cities Lab](https://sec.ethz.ch/research/fcl.html) in Singapore.
 
 For selected projects, see below. 
 
-For a complete list of publications [click here](/pdfs/publications.pdf). 
-
-My CV is available [here](/pdfs/cv.pdf).
+For a complete list of publications [click here](/pdfs/publications.pdf).
 
 ---
 
 ## Architectural Cognition
 
-I am interested in how psychology can aid architecture in improving the usability of buildings. I study how space 'guides' our behaviour, our attention, and our thinking. I design formal measures for architectural computation that are grounded in the cognitive experience of space.
+I am interested in how psychology can aid architecture in improving the usability of buildings. I study how space guides our behaviour, our attention, and our thinking. I design formal measures for architectural computation that are grounded in the cognitive experience of space.
 
 ![Architectural Cognition](/images/arch.jpg)
 
@@ -30,13 +30,25 @@ Key publications:
 
 ---
 
+## 3D Sketch Maps
+
+As architectural researchers we want to study how people understand buildings. One good method for that are sketch maps. Sketch Maps are informal drawings of cities and buildings that you might draw on a napking to explain others how to get from A to B. However, drawing more complex buildings (where separate floors differ in shape from each other) is difficult to do without professional drawing training. Virtual Reality gave us the tools to draw "in the air" in 3D. Together with partners from ETH Zürich, we study how 3D drawing can be used by untrained people to express their knowledge of complex buildings.
+
+![Architectural Cognition](/images/3dsm.jpg)
+
+Key publication:
+
+* ["3D Sketch Maps: Concept, Potential Benefits, and Challenges"](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/565530/kim_cosit2022.pdf?sequence=1)
+
+---
+
 ## Spatial Layouts of Art Galleries
 
 Art galleries are a very unique type of space: white, empty walls and the art itself are almost the only visual stimuli around. In such a situation, their spatial layout (the spatial arrangement of artworks and rooms) is what really steers the visitors’ attention.
 
 ![Art Galleries PhD Project](/images/artgalleries.jpg)
 
-In my PhD project I demonstrated that the layout of space can have a larger impact on visitor's attention than the differences between individual artworks. I also showed that although the layout can change the strategy with which visitors attend to artworks, cumulative time spent on attending to each picture is unaffected by its location. Methodologically, the project combined Mobile Eye-Tracking with the architectural theory of Space Syntax.
+In my PhD I demonstrated that the layout of space can have a larger impact on visitor's attention than the differences between individual artworks. I also showed that although the layout can change the strategy with which visitors attend to artworks, cumulative time spent on attending to each picture is unaffected by its location. Methodologically, the project combined Mobile Eye-Tracking with the architectural theory of Space Syntax.
 
 Key publications:
 
