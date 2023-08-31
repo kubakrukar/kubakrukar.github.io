@@ -1,5 +1,6 @@
 Jakub Krukar
-logo: '/images/1.png'
+logo: 
+  '/images/1.png'
 description:
   Junior Professor in Spatial Cognition
   <br>
