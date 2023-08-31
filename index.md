@@ -6,7 +6,7 @@ I am a Junior Professor in Spatial Cognition - a branch of cognitive science stu
 
 My background and approach are interdisciplinary, with an MA in psychology, a PhD from a department of architecture, and postdoctoral experience in geoinformatics. Methods I work with include virtual reality, mobile eye-tracking, spatial computation, Bayesian statistics, and architectural theory of Space Syntax.
 
-I am based at the [Institute for Geoinformatics](https://www.uni-muenster.de/Geoinformatics/en/index.html) in Münster, Germany. Prior to that I was at [Northumbria University](https://www.northumbria.ac.uk) in Newcastle, UK and as a Visiting Fellow at [Future Cities Lab](https://sec.ethz.ch/research/fcl.html) in Singapore.
+I am based at the [Institute for Geoinformatics](https://www.uni-muenster.de/Geoinformatics/en/index.html) in Münster, Germany. I also enjoyed a tenure as a Visiting Fellow at [Future Cities Lab](https://sec.ethz.ch/research/fcl.html) in Singapore. Prior to that I was at [Northumbria University](https://www.northumbria.ac.uk) in Newcastle, UK.
 
 For selected projects, see below. 
 
