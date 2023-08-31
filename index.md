@@ -32,7 +32,7 @@ Key publications:
 
 ## 3D Sketch Maps
 
-As architectural researchers we want to study how people understand buildings. One good method for that are sketch maps. Sketch Maps are informal drawings of cities and buildings that you might draw on a napking to explain others how to get from A to B. However, drawing more complex buildings (where separate floors differ in shape from each other) is difficult to do without professional drawing training. Virtual Reality gave us the tools to draw "in the air" in 3D. Together with partners from ETH Zürich, we study how 3D drawing can be used by untrained people to express their knowledge of complex buildings.
+As architectural researchers we want to study how people understand buildings. One good method for this are sketch maps - informal drawings that you might draw on a napkin to explain a friend how to get from A to B. However, drawing more complex buildings is difficult without professional training. Virtual Reality gave us tools to draw "in the air", in 3D. Together with partners from ETH Zürich, we study how 3D drawing can be used by untrained people to express their knowledge of complex buildings.
 
 ![Architectural Cognition](/images/3dsm.jpg)
 
