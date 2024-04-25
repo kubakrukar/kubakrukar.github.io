@@ -2,15 +2,13 @@
 
 ## Biosketch
 
+**This website is no longer updated. Please head to my lab's website: [SPARC](https://SPARC.uni-muenster.de)**
+
 I am a Junior Professor in Spatial Cognition - a branch of cognitive science studying how people think *about*, think *in*, and think *with* space.
 
 My background and approach are interdisciplinary, with an MA in psychology, a PhD from a department of architecture, and postdoctoral experience in geoinformatics. Methods I work with include virtual reality, mobile eye-tracking, spatial computation, Bayesian statistics, and architectural theory of Space Syntax.
 
-I am based at the [Institute for Geoinformatics](https://www.uni-muenster.de/Geoinformatics/en/index.html) in Münster, Germany where I'm currently setting up [Spatial and Architectural Cognition Lab](https://www.uni-muenster.de/Geoinformatics/sparc/about/about.html) ([and we are recruiting!](https://www.findaphd.com/phds/project/phd-scholarship-on-architectural-cognition-and-computation/?p162726)). Previously I've spent some time as a Visiting Fellow with Christoph Hölscher at [Future Cities Lab](https://sec.ethz.ch/research/fcl.html) in Singapore. Prior to that I did my PhD with Ruth Dalton at [Northumbria University](https://www.northumbria.ac.uk) in Newcastle, UK.
-
-For selected projects, see below. 
-
-For a complete list of publications [click here](/pdfs/publications.pdf).
+I am based at the [Institute for Geoinformatics](https://www.uni-muenster.de/Geoinformatics/en/index.html) in Münster, Germany where I'm currently setting up [Spatial and Architectural Cognition Lab](https://www.uni-muenster.de/Geoinformatics/sparc/about/about.html). I am also a Visiting Fellow at [Future Cities Lab Singapore](https://sec.ethz.ch/research/fcl.html). Prior to that I did my PhD with Prof. Ruth Dalton at [Northumbria University](https://www.northumbria.ac.uk) in Newcastle, UK.
 
 ---
 
