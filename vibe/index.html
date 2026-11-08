@@ -256,7 +256,7 @@ vec3 scene(vec2 uv,vec2 fc){
 vec3 scene(vec2 uv,vec2 fc){
  float r=length(uv),a=atan(uv.y,uv.x);
  float push=floor(uBeat)+(1.-exp(-fract(uBeat)*7.));
- float ph=r*6.5-push*.5+.12*sin(a*3.+uT*.3)+.05*sin(a*5.-uT*.2);
+ float ph=r*6.5-push*.5+smoothstep(0.,.2,r)*(.12*sin(a*3.+uT*.3)+.05*sin(a*5.-uT*.2));
  float idx=floor(ph),f=fract(ph);
  vec3 c=pick(h1(idx*1.37)*.999);
  float edge=smoothstep(0.,.05,f)*smoothstep(1.,.95,f);
