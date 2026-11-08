@@ -8,13 +8,23 @@
 html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff}
 body.run{cursor:none}
 canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
-#info{position:fixed;left:5vw;bottom:6vh;opacity:0;transition:opacity 2s;text-shadow:0 0 24px rgba(0,0,0,.7);pointer-events:none}
-#info.show{opacity:.9}
-#title{font-size:4.4vh;font-weight:600}
-#artist{font-size:3vh;opacity:.8;margin-top:.6vh}
-#meta{font-size:1.9vh;opacity:.55;margin-top:1.2vh}
-#toast{position:fixed;right:4vw;top:4vh;font-size:2.2vh;background:rgba(0,0,0,.55);padding:.8vh 1.4vw;border-radius:1vh;opacity:0;transition:opacity .6s;pointer-events:none}
+#card{position:fixed;bottom:4vh;display:flex;align-items:center;gap:1.4vw;padding:1.1vh 1.8vw 1.1vh 1.1vh;border-radius:1.6vh;background:rgba(0,0,0,.38);opacity:0;transition:opacity 1.5s;pointer-events:none;max-width:42vw}
+#card.left{left:3vw}#card.right{right:3vw}
+#card.show{opacity:.92}#card.dim{opacity:.4}
+#cover{width:10vh;height:10vh;border-radius:.8vh;object-fit:cover;flex:none;background:#222}
+#title{font-size:2.6vh;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#artist{font-size:2vh;opacity:.75;margin-top:.4vh;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#toast{position:fixed;right:4vw;top:4vh;font-size:2.4vh;background:rgba(0,0,0,.6);padding:.9vh 1.6vw;border-radius:1vh;opacity:0;transition:opacity .6s;pointer-events:none;text-align:right}
+#toast small{display:block;font-size:1.6vh;opacity:.65;margin-top:.3vh}
 #toast.show{opacity:1}
+#menu{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);min-width:46vw;background:rgba(10,10,14,.88);border-radius:2vh;padding:2.4vh 2.4vw;display:none;font-size:2.6vh}
+#menu.show{display:block}
+#menu h2{margin:0 0 1.6vh;font-size:2.2vh;font-weight:500;opacity:.6;letter-spacing:.1em;text-transform:uppercase}
+.row{display:flex;justify-content:space-between;gap:3vw;padding:1.1vh 1.2vw;border-radius:1vh}
+.row.sel{background:rgba(255,255,255,.12)}
+.row .v{font-weight:600}.row.sel .v:before{content:"◀  ";opacity:.5}.row.sel .v:after{content:"  ▶";opacity:.5}
+.row small{display:block;font-size:1.6vh;opacity:.55;font-weight:400;margin-top:.3vh;text-align:right}
+#menu .hint{font-size:1.7vh;opacity:.5;margin-top:1.6vh}
 #setup{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#0b0b10;overflow:auto}
 #setup>div{max-width:680px;padding:32px;line-height:1.55}
 #setup h1{font-weight:600;margin-top:0}
@@ -28,8 +38,9 @@ canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="info"><div id="title"></div><div id="artist"></div><div id="meta"></div></div>
+<div id="card" class="left"><img id="cover" alt=""><div style="min-width:0"><div id="title"></div><div id="artist"></div></div></div>
 <div id="toast"></div>
+<div id="menu"><h2>Vibe</h2><div id="rows"></div><div class="hint">▲▼ choose · ◀▶ change · OK close</div></div>
 <div id="pair">
   <b>Projector link</b> (this is a login credential, treat it like a password).<br>
   Open it once on the projector. This browser logs out so the two don't fight over the token.
@@ -57,10 +68,6 @@ const REDIRECT = location.origin + location.pathname.replace(/index\.html$/, '')
 const SCOPES = 'user-read-currently-playing user-read-playback-state';
 const DEMO = new URLSearchParams(location.search).has('demo');
 
-function toast(msg, ms = 2500) {
-  const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), ms);
-}
 
 /* ---------- Spotify auth (PKCE, no server) ---------- */
 const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -144,93 +151,209 @@ async function lookupTempo(item) {
   return out;
 }
 
-/* ---------- palette from album art ---------- */
-function lum(c) { return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
-function saturate(c, k) { const l = lum(c); return c.map(v => Math.min(1, Math.max(0, l + (v - l) * k))); }
-function kmeans(px, k) {
-  px.sort((a, b) => lum(a) - lum(b));
-  let cen = Array.from({ length: k }, (_, i) => px[Math.floor((i + 0.5) * px.length / k)].slice());
-  let cnt;
-  for (let it = 0; it < 10; it++) {
-    const sum = cen.map(() => [0, 0, 0]); cnt = cen.map(() => 0);
-    for (const p of px) {
-      let best = 0, bd = 9;
-      cen.forEach((c, i) => { const d = (p[0]-c[0])**2 + (p[1]-c[1])**2 + (p[2]-c[2])**2; if (d < bd) { bd = d; best = i; } });
-      sum[best][0] += p[0]; sum[best][1] += p[1]; sum[best][2] += p[2]; cnt[best]++;
-    }
-    cen = cen.map((c, i) => cnt[i] ? sum[i].map(v => v / cnt[i]) : c);
-  }
-  return cen.map((c, i) => ({ c, n: cnt[i] }));
-}
-function chroma(c) { return Math.max(...c) - Math.min(...c); }
-function buildPalette(clusters) {
-  const cs = clusters.sort((a, b) => lum(a.c) - lum(b.c)).map(o => o.c);
-  const vivid = cs.reduce((s, c) => s + chroma(c), 0) / cs.length;
-  const boost = vivid < 0.12 ? 1.0 : 1.3;        // keep black-and-white covers monochrome
-  const p = cs.map(c => saturate(c, boost));
-  p[0] = p[0].map(v => v * 0.35);                 // darkest = background, pushed down
-  p[p.length - 1] = p[p.length - 1].map(v => Math.min(1, v * 1.1 + 0.05));
-  return { cols: p, vivid };
-}
-function paletteFrom(url) {
-  return new Promise(res => {
-    const img = new Image(); img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      try {
-        const c = document.createElement('canvas'); c.width = c.height = 40;
-        const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, 40, 40);
-        const d = x.getImageData(0, 0, 40, 40).data, px = [];
-        for (let i = 0; i < d.length; i += 4) px.push([d[i] / 255, d[i + 1] / 255, d[i + 2] / 255]);
-        res(buildPalette(kmeans(px, 4)));
-      } catch (e) { res(null); }
-    };
-    img.onerror = () => res(null);
-    img.src = url;
-  });
-}
-function hsl(h, s, l) { const f = n => { const k = (n + h * 12) % 12, a = s * Math.min(l, 1 - l); return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }; return [f(0), f(8), f(4)]; }
-function hashPalette(str) {
-  let h = 0; for (const ch of str) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const base = (h % 360) / 360;
-  return { cols: [hsl(base, .5, .06), hsl(base + .08, .6, .3), hsl(base + .5, .55, .5), hsl(base + .55, .7, .78)], vivid: .4 };
-}
+
+
+/* ---------- palettes: C0 = ground, C1..C4 = colours (C4 brightest) ---------- */
+const PALETTES = {
+  'Riley mono':     ['#050505','#2b2b2b','#e4322b','#8f8f8f','#f4f1ea'],
+  'Bauhaus':        ['#111111','#f1ede4','#d62828','#f6bd16','#1f4e9c'],
+  'Infinity red':   ['#0b0b0b','#e01f26','#ffd23f','#ff6f91','#f4f1ea'],
+  'Tokyo neon':     ['#06010f','#3a0ca3','#ff2e88','#00e5ff','#f9f871'],
+  'Nordic dusk':    ['#0a1220','#1d3c5a','#5f8fae','#e4b363','#f6e7cb'],
+  'Temple pastel':  ['#2e2a3a','#e8a0a6','#f2c14e','#7aa6c2','#f3ead8'],
+  'Ember':          ['#140607','#4a1416','#b23a1f','#e07a2b','#f2c27b'],
+  'Forest':         ['#03110b','#0f3b2c','#2f7d5b','#9cc69b','#eef6e8'],
+  'Caracas':        ['#101010','#e63946','#2a9d8f','#f4a261','#3d5a80'],
+  'Deep ocean':     ['#020617','#0e3a5c','#2b8ab8','#7fd3e6','#f2fbff']
+};
+const ENERGY_PALS = [['Nordic dusk','Forest','Ember'], ['Temple pastel','Deep ocean','Caracas'], ['Tokyo neon','Bauhaus','Infinity red']];
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+
+/* ---------- shaders ---------- */
+const COMMON = `precision mediump float;
+uniform vec2 uRes;uniform float uT,uBeat,uKick,uSnare,uBar,uEnergy,uDim,uPhrase;
+uniform vec3 uC0,uC1,uC2,uC3,uC4;
+#define PI 3.14159265
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float h1(float x){return fract(sin(x*91.7+3.1)*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
+ return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x),u.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+vec3 pal(float t){t=fract(t)*4.;return t<1.?mix(uC1,uC2,t):t<2.?mix(uC2,uC3,t-1.):t<3.?mix(uC3,uC4,t-2.):mix(uC4,uC1,t-3.);}
+vec3 pick(float h){return h<.25?uC1:h<.5?uC2:h<.75?uC3:uC4;}
+vec3 scene(vec2 uv,vec2 fc);
+void main(){vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;vec3 c=scene(uv,gl_FragCoord.xy);
+ float r=length(uv);c*=uDim*(1.-.22*r*r);gl_FragColor=vec4(c,1.);}
+`;
+const STYLES = [
+  { name: 'Op art', after: 'after Bridget Riley (UK) and Victor Vasarely (HU/FR)', pal: 'Riley mono', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float w=.16*sin(uv.x*2.6+uT*.7)+.1*sin(uv.x*5.1-uT*.5+uv.y*2.)+.2*uKick*sin(uv.x*3.5+uBar*1.7);
+ float y=(uv.y+w)*13.;
+ float s=smoothstep(-.18,.18,sin(y*PI));
+ vec3 c=mix(uC0,uC4,s);
+ float band=floor(y);
+ float acc=step(mod(band+floor(uBar),7.),.5);
+ c=mix(c,uC2,acc*s*(.55+.45*uKick));
+ return c*(1.+.15*uKick);}` },
+  { name: 'Dots', after: 'after Yayoi Kusama (JP)', pal: 'Infinity red', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec3 c=uC0;
+ for(int L=0;L<2;L++){
+  float fl=float(L);float sc=fl<.5?4.5:10.;
+  vec2 g=uv*sc+vec2(uT*(fl<.5?.12:-.2),fl*.5);
+  vec2 id=floor(g);vec2 f=fract(g)-.5;float h=hash(id+fl*17.);
+  float on=step(.45,fract(h*3.+floor(uBeat)*.37));
+  float r=(fl<.5?.3:.2)*(.8+.2*sin(uT+h*6.28))+.16*uKick*on;
+  float aa=sc*1.5/uRes.y;
+  float d=1.-smoothstep(r-aa,r,length(f));
+  c=mix(c,fl<.5?pick(h):uC4,d*(fl<.5?1.:.9));
+ }
+ return c;}` },
+  { name: 'Data', after: 'after Ryoji Ikeda (JP)', pal: 'Riley mono', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 p=fc/uRes;float beat=floor(uBeat);
+ float row=floor(p.y*18.);
+ float sp=(h1(row+beat*7.)-.5)*2.;
+ float x=floor((p.x+uT*.06*sp)*220.);
+ float bit=step(.62-.3*uKick,hash(vec2(x,row+beat*13.)));
+ float rowOn=step(.4,h1(row*3.1+floor(uBeat*.5)));
+ vec3 c=mix(uC0,uC4,bit*rowOn*(.45+.55*uKick));
+ float sl=1.-smoothstep(0.,2.5/uRes.y,abs(p.y-fract(uT*.2)));
+ c=mix(c,uC2,sl);
+ c=mix(c,uC4-c,uSnare*.8*step(.55,uEnergy));
+ return c;}` },
+  { name: 'Colour field', after: 'after Mark Rothko (LV/US)', pal: 'Ember', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float n=(fbm(uv*3.+uT*.05)-.5)*.08;
+ float e=.035+.03*uKick;
+ float bx=smoothstep(.64+e,.64-e,abs(uv.x)+n);
+ float top=smoothstep(.41+e,.41-e,uv.y+n)*smoothstep(.03-e,.03+e,uv.y-n);
+ float bot=smoothstep(-.03+e,-.03-e,uv.y+n)*smoothstep(-.41-e,-.41+e,uv.y-n);
+ float br=1.+.14*uKick+.3*uPhrase;
+ vec3 c=mix(uC1*.55,uC3*br,bx*top);
+ c=mix(c,uC2*br,bx*bot);
+ c+=.04*(fbm(uv*9.+uT*.1)-.5);
+ return c;}` },
+  { name: 'Bauhaus grid', after: 'after Piet Mondrian (NL) and Sophie Taeuber-Arp (CH)', pal: 'Bauhaus', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 p=fc/uRes;vec2 lo=vec2(0.),hi=vec2(1.);float seed=floor(uBar/2.);
+ for(int i=0;i<5;i++){
+  float fi=float(i);
+  float h=hash(lo*7.13+hi*3.71+vec2(seed,fi));
+  float s=mix(.3,.7,hash(lo*1.7+hi*9.1+vec2(fi,seed*1.3)));
+  if((hi.x-lo.x)*uRes.x>(hi.y-lo.y)*uRes.y*(h+.5)){float m=mix(lo.x,hi.x,s);if(p.x<m)hi.x=m;else lo.x=m;}
+  else{float m=mix(lo.y,hi.y,s);if(p.y<m)hi.y=m;else lo.y=m;}
+ }
+ vec2 id=lo+hi;float h=hash(id*13.7);
+ vec3 c=h<.55?uC1:h<.7?uC2:h<.82?uC3:h<.94?uC4:uC0;
+ float lit=step(.78,hash(id*5.3+floor(uBeat)));
+ c=mix(c,pick(.25+.75*hash(id+floor(uBeat)*1.7)),lit*(.35+.65*uKick));
+ float d=min(min(p.x-lo.x,hi.x-p.x)*uRes.x,min(p.y-lo.y,hi.y-p.y)*uRes.y);
+ float bw=uRes.y*.007;
+ return mix(uC0,c,smoothstep(bw,bw+1.5,d));}` },
+  { name: 'Spirals', after: 'after Hilma af Klint (SE)', pal: 'Temple pastel', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float r=length(uv),a=atan(uv.y,uv.x);
+ float push=floor(uBeat)+(1.-exp(-fract(uBeat)*7.));
+ float ph=r*6.5-push*.5+.12*sin(a*3.+uT*.3)+.05*sin(a*5.-uT*.2);
+ float idx=floor(ph),f=fract(ph);
+ vec3 c=pick(h1(idx*1.37)*.999);
+ float edge=smoothstep(0.,.05,f)*smoothstep(1.,.95,f);
+ c=mix(uC0,c,edge);
+ return c*(1.+.12*uKick);}` },
+  { name: 'Chromatic lines', after: 'after Carlos Cruz-Diez (VE)', pal: 'Caracas', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 p=fc/uRes;
+ float lines=fc.x/(uRes.y*.018);
+ float li=floor(lines),lf=fract(lines);
+ float step8=floor(uBeat)+(1.-exp(-fract(uBeat)*8.));
+ float region=floor((p.x*1.2+p.y*.6+.05*sin(p.y*6.+uT*.4))*4.+step8*.5);
+ float idx=mod(li+region,4.);
+ vec3 c=idx<1.?uC1:idx<2.?uC2:idx<3.?uC3:uC4;
+ c=mix(uC0,c,step(.22,lf)*step(lf,.86));
+ return c*(1.+.3*uKick);}` },
+  { name: 'Liquid', after: 'after Refik Anadol (TR/US)', pal: 'Deep ocean', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 q=vec2(fbm(uv*1.4+uT*.08),fbm(uv*1.4-uT*.1+5.2));
+ vec2 rip=uv/(length(uv)+.05)*sin(length(uv)*16.-uBeat*2.*PI)*.04*uKick;
+ float n=fbm(uv*1.3+(1.+.8*uEnergy)*q+rip+uT*.04);
+ vec3 c=pal(n*1.3+uBar*.02);
+ c=mix(uC0,c,smoothstep(.2,.6,n));
+ return c+uC4*uKick*.14;}` },
+  { name: 'Tunnel', after: 'club VJ tradition', pal: 'Tokyo neon', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float r=length(uv)+.001,a=atan(uv.y,uv.x);
+ float lunge=floor(uBeat)+(1.-exp(-fract(uBeat)*6.));
+ float z=.4/r+lunge*.5+uT*.1;
+ float rings=smoothstep(.45,.55,fract(z*2.));
+ float spokes=smoothstep(.45,.55,fract(a/PI*4.+z*.25));
+ vec3 c=mix(uC1,uC3,rings);
+ c=mix(c,uC2,spokes*.55);
+ c*=smoothstep(0.,.45,r)*(1.+.45*uKick);
+ return c+uC4*exp(-r*7.)*uKick;}` }
+];
+const AUTO = STYLES.length; // index for "Auto"
+const styleName = i => i === AUTO ? 'Auto' : STYLES[i].name;
+
+/* ---------- settings ---------- */
+const PAL_OPTS = ['Style default', 'Follow song energy', ...Object.keys(PALETTES)];
+const STRENGTHS = [['Subtle', .45], ['Medium', .75], ['Strong', 1]];
+const CARD_OPTS = ['Bottom left', 'Bottom right', 'Off'];
+const SET = {
+  style: +(LS('style') ?? AUTO), pal: +(LS('pal') ?? 0), strength: +(LS('strength') ?? 2),
+  card: +(LS('card') ?? 0), latency: +(LS('lat') ?? 250)
+};
+if (!(SET.style >= 0 && SET.style <= AUTO)) SET.style = AUTO;
+if (!(SET.pal >= 0 && SET.pal < PAL_OPTS.length)) SET.pal = 0;
+const saveSet = () => { SS('style', SET.style); SS('pal', SET.pal); SS('strength', SET.strength); SS('card', SET.card); SS('lat', SET.latency); };
 
 /* ---------- state ---------- */
 const S = {
-  trackId: null, playing: false, progress: 0, progressAt: 0, duration: 1,
-  bpm: 0, energy: .5, pal: hashPalette('idle').cols, target: hashPalette('idle').cols,
-  dim: .35, mode: +(LS('mode') || 0), latency: +(LS('lat') || 250), flow: 0
+  trackId: null, playing: false, progress: 0, progressAt: 0,
+  bpm: 0, energy: .5, active: 0, pal: null, target: null, dim: .35, flow: 0, lastAutoBar: -1, seed: 0
 };
-const MODES = ['Flow', 'Tunnel', 'Aurora'];
+function currentStyle() { return SET.style === AUTO ? S.active : SET.style; }
+function choosePalette() {
+  let name;
+  if (SET.pal === 0) name = STYLES[currentStyle()].pal;
+  else if (SET.pal === 1) { const tier = S.energy < .38 ? 0 : S.energy < .66 ? 1 : 2; name = ENERGY_PALS[tier][S.seed % 3]; }
+  else name = PAL_OPTS[SET.pal];
+  S.target = PALETTES[name].map(hex);
+  if (!S.pal) S.pal = S.target.map(c => c.slice());
+  return name;
+}
+function setActive(i) { S.active = i; choosePalette(); }
 
-function showInfo(ms = 9000) {
-  $('info').classList.add('show');
-  clearTimeout(showInfo.h); if (ms) showInfo.h = setTimeout(() => $('info').classList.remove('show'), ms);
+/* ---------- track card ---------- */
+function updateCard() {
+  const c = $('card');
+  c.className = SET.card === 1 ? 'right' : 'left';
+  if (SET.card === 2 || !S.trackId) return;
+  c.classList.add(S.playing ? 'show' : 'dim');
 }
 async function onTrack(item) {
-  S.trackId = item.id; S.duration = item.duration_ms;
+  S.trackId = item.id;
+  let h = 0; for (const ch of item.id) h = (h * 31 + ch.charCodeAt(0)) >>> 0; S.seed = h;
   $('title').textContent = item.name;
   $('artist').textContent = item.artists.map(a => a.name).join(', ');
-  $('meta').textContent = '';
-  showInfo();
-  const imgs = item.album.images || [];
-  const img = imgs.length ? imgs.reduce((a, b) => Math.abs(a.width - 300) < Math.abs(b.width - 300) ? a : b).url : null;
-  const [pal, tempo] = await Promise.all([img ? paletteFrom(img) : null, lookupTempo(item).catch(() => ({ bpm: 0, gain: null }))]);
+  const imgs = (item.album && item.album.images) || [];
+  const img = imgs.length ? imgs.reduce((a, b) => Math.abs(a.width - 200) < Math.abs(b.width - 200) ? a : b).url : '';
+  $('cover').src = img; $('cover').style.visibility = img ? 'visible' : 'hidden';
+  updateCard();
+  const tempo = await lookupTempo(item).catch(() => ({ bpm: 0, gain: null }));
   if (S.trackId !== item.id) return;
-  const p = pal || hashPalette(item.id);
-  S.target = p.cols;
   S.bpm = tempo.bpm;
-  // energy 0..1 from tempo, loudness (Deezer gain: more negative = louder master) and cover vividness
   const tE = tempo.bpm ? Math.min(1, Math.max(0, (tempo.bpm - 70) / 90)) : .4;
   const gE = tempo.gain != null ? Math.min(1, Math.max(0, (-tempo.gain - 4) / 10)) : tE;
-  S.energy = .5 * tE + .3 * gE + .2 * Math.min(1, p.vivid * 2);
-  $('meta').textContent = (tempo.bpm ? Math.round(tempo.bpm) + ' bpm' : 'tempo unknown, breathing mode') + ' · ' + MODES[S.mode];
+  S.energy = .65 * tE + .35 * gE;
+  if (SET.style === AUTO) setActive(S.seed % STYLES.length); else choosePalette();
 }
 
 async function poll() {
   let wait = 3000;
   try {
-    const r = await api('/me/player/currently-playing?additional_types=episode');
+    const r = await api('/me/player/currently-playing');
     if (r.status === 204) { S.playing = false; wait = 6000; }
     else if (r.status === 429) { wait = (+r.headers.get('Retry-After') || 30) * 1000; }
     else if (r.ok) {
@@ -244,74 +367,50 @@ async function poll() {
     if (e.message === 'nologin') { showSetup('Logged out. Please log in again.'); return; }
     wait = 10000;
   }
+  updateCard();
   setTimeout(poll, wait);
 }
 
 function startDemo() {
   const demos = [
-    { id: 'd1', name: 'Demo: warm and fast', artists: [{ name: 'Vibe' }], bpm: 124, cols: [[.08,.02,.02],[.6,.12,.1],[.95,.5,.15],[1,.9,.6]], e: .85 },
-    { id: 'd2', name: 'Demo: cold and slow', artists: [{ name: 'Vibe' }], bpm: 76, cols: [[.01,.02,.06],[.1,.2,.45],[.25,.6,.7],[.8,.95,1]], e: .3 }
+    { id: 'demo-fast', name: 'Demo: energetic, 126 bpm', artists: [{ name: 'Vibe' }], bpm: 126, e: .85 },
+    { id: 'demo-slow', name: 'Demo: calm, 78 bpm', artists: [{ name: 'Vibe' }], bpm: 78, e: .25 }
   ];
   let i = 0;
   const next = () => {
     const d = demos[i++ % demos.length];
-    S.trackId = d.id; S.target = d.cols; S.bpm = d.bpm; S.energy = d.e; S.playing = true;
-    S.progress = 0; S.progressAt = performance.now();
-    $('title').textContent = d.name; $('artist').textContent = d.artists[0].name;
-    $('meta').textContent = d.bpm + ' bpm · ' + MODES[S.mode]; showInfo();
+    S.trackId = null; S.playing = true; S.progress = 0; S.progressAt = performance.now();
+    lookupTempo = async () => ({ bpm: d.bpm, gain: d.e > .5 ? -12 : -5 });
+    onTrack({ id: d.id, name: d.name, artists: d.artists, album: { images: [] } });
   };
-  next(); setInterval(next, 30000);
+  next(); setInterval(next, 40000);
 }
 
 /* ---------- WebGL ---------- */
 const canvas = $('c');
 const gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
 const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
-const FS = `precision mediump float;
-uniform vec2 uRes;uniform float uFlow,uPulse,uDown,uEnergy,uDim,uMode;
-uniform vec3 uC0,uC1,uC2,uC3;
-float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float noise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
- return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x),u.y);}
-float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
-vec3 pal(float t){t=clamp(t,0.,1.)*3.;return t<1.?mix(uC0,uC1,t):t<2.?mix(uC1,uC2,t-1.):mix(uC2,uC3,t-2.);}
-void main(){
- vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;
- float t=uFlow,r=length(uv);vec3 col;
- if(uMode<.5){
-  vec2 q=vec2(fbm(uv*1.6+t*.10),fbm(uv*1.6-t*.13+5.2));
-  vec2 w=uv*1.4+(1.0+.8*uEnergy)*q+.08*uPulse*uv/(r+.05);
-  col=pal(smoothstep(.18,.85,fbm(w+t*.05)));
- }else if(uMode<1.5){
-  float a=atan(uv.y,uv.x),z=.35/(r+.12)+t*.5;
-  float n=fbm(vec2(a*1.2+3.,z));
-  float rings=.5+.5*sin(z*6.2832-uPulse*1.5);
-  col=pal(mix(n,rings,.3+.35*uEnergy))*smoothstep(0.,.3,r+.04);
- }else{
-  float y=uv.y+.3*fbm(vec2(uv.x*1.1+t*.08,t*.05))-.15;
-  float band=exp(-pow(y*3.2,2.));
-  float n=fbm(vec2(uv.x*2.+t*.12,y*4.-t*.05));
-  col=mix(uC0,pal(.35+.65*n),band*(.75+.25*uPulse));
- }
- float ring=exp(-pow((r-(.1+(1.-uPulse)*.9))*7.,2.))*uPulse;
- col+=pal(.95)*uPulse*(.06+.18*uDown)*(1.-.6*r)*(.4+.6*uEnergy)+pal(1.)*ring*.22*uEnergy;
- col*=uDim*(1.-.35*r*r);
- gl_FragColor=vec4(col,1.);
-}`;
-let U = {};
+const UNI = ['uRes','uT','uBeat','uKick','uSnare','uBar','uEnergy','uDim','uPhrase','uC0','uC1','uC2','uC3','uC4'];
+const programs = [];
+let vbuf;
+function compile(i) {
+  if (programs[i]) return programs[i];
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(STYLES[i].name + ': ' + gl.getShaderInfoLog(s)); return s; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, COMMON + STYLES[i].fs));
+  gl.bindAttribLocation(pr, 0, 'p'); gl.linkProgram(pr);
+  const u = {}; for (const n of UNI) u[n] = gl.getUniformLocation(pr, n);
+  return (programs[i] = { pr, u });
+}
 function initGL() {
   if (!gl) { document.body.innerHTML = '<p style="padding:40px">This browser has no WebGL.</p>'; return false; }
-  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
-  const pr = gl.createProgram();
-  gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  vbuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vbuf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
-  const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  for (const n of ['uRes','uFlow','uPulse','uDown','uEnergy','uDim','uMode','uC0','uC1','uC2','uC3']) U[n] = gl.getUniformLocation(pr, n);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
   return true;
 }
-const SCALE = +(new URLSearchParams(location.search).get('scale') || LS('scale') || 0.5); // render below native res for weak GPUs
+const SCALE = +(new URLSearchParams(location.search).get('scale') || LS('scale') || 0.5);
 function resize() {
   canvas.width = Math.round(innerWidth * SCALE); canvas.height = Math.round(innerHeight * SCALE);
   gl.viewport(0, 0, canvas.width, canvas.height);
@@ -319,40 +418,86 @@ function resize() {
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(.1, (now - last) / 1000); last = now;
-  const k = 1 - Math.exp(-dt / 1.5);
+  const k = 1 - Math.exp(-dt / 1.2);
   S.pal = S.pal.map((c, i) => c.map((v, j) => v + (S.target[i][j] - v) * k));
   S.dim += ((S.playing ? 1 : .3) - S.dim) * (1 - Math.exp(-dt / 2));
-  const prog = S.progress + (S.playing ? now - S.progressAt : 0) - S.latency;
-  let pulse = 0, down = 0;
-  if (S.playing && S.bpm) {
-    const beats = Math.max(0, prog) / 60000 * S.bpm, ph = beats - Math.floor(beats);
-    pulse = Math.exp(-ph * (4 + 3 * S.energy)) * (.5 + .5 * S.energy);
-    down = Math.floor(beats) % 4 === 0 ? 1 : 0;
+
+  const str = STRENGTHS[SET.strength][1];
+  const prog = S.progress + (S.playing ? now - S.progressAt : 0) - SET.latency;
+  const hasBeat = S.playing && S.bpm;
+  const beats = hasBeat ? Math.max(0, prog) / 60000 * S.bpm : now / 1000 * .8;
+  const bi = Math.floor(beats), ph = beats - bi;
+  let kick = 0, snare = 0, phrase = 0;
+  if (hasBeat) {
+    kick = Math.exp(-ph * 9) * (bi % 4 === 0 ? 1 : .72) * str;
+    snare = bi % 2 === 1 ? Math.exp(-ph * 7) * str : 0;
+    phrase = bi % 32 === 0 ? Math.exp(-ph * 2) * str : 0;
   } else if (S.playing) {
-    pulse = .25 * (.5 + .5 * Math.sin(now / 1000 * Math.PI * .5));
+    kick = .25 * str * (.5 + .5 * Math.sin(now / 1000 * Math.PI * .5));
   }
-  const tempo = S.bpm ? S.bpm / 120 : .8;
-  S.flow += dt * (S.playing ? (.12 + .35 * tempo * (.4 + S.energy)) : .03);
-  gl.uniform2f(U.uRes, canvas.width, canvas.height);
-  gl.uniform1f(U.uFlow, S.flow); gl.uniform1f(U.uPulse, pulse); gl.uniform1f(U.uDown, down);
-  gl.uniform1f(U.uEnergy, S.energy); gl.uniform1f(U.uDim, S.dim); gl.uniform1f(U.uMode, S.mode);
-  ['uC0','uC1','uC2','uC3'].forEach((n, i) => gl.uniform3fv(U[n], S.pal[i]));
+  const bar = Math.floor(beats / 4);
+  if (SET.style === AUTO && hasBeat && bar % 16 === 0 && bi % 4 === 0 && bar !== S.lastAutoBar && bar > 0) {
+    S.lastAutoBar = bar; setActive((S.active + 1 + (S.seed % (STYLES.length - 1))) % STYLES.length);
+  }
+  const tempo = S.bpm ? S.bpm / 120 : .7;
+  S.flow += dt * (S.playing ? (.15 + .35 * tempo * (.4 + S.energy)) : .03);
+
+  let P;
+  try { P = compile(currentStyle()); } catch (e) { toast('Style failed: ' + e.message); SET.style = AUTO; S.active = 0; P = compile(0); }
+  gl.useProgram(P.pr); const u = P.u;
+  gl.uniform2f(u.uRes, canvas.width, canvas.height);
+  gl.uniform1f(u.uT, S.flow); gl.uniform1f(u.uBeat, beats); gl.uniform1f(u.uKick, kick);
+  gl.uniform1f(u.uSnare, snare); gl.uniform1f(u.uBar, bar); gl.uniform1f(u.uEnergy, S.energy);
+  gl.uniform1f(u.uDim, S.dim); gl.uniform1f(u.uPhrase, phrase);
+  ['uC0','uC1','uC2','uC3','uC4'].forEach((n, i) => gl.uniform3fv(u[n], S.pal[i]));
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   requestAnimationFrame(frame);
 }
 
-/* ---------- remote control ---------- */
+/* ---------- menu & remote ---------- */
+let menuRow = 0;
+const ROWS = [
+  { label: 'Style', get: () => styleName(SET.style), sub: () => SET.style === AUTO ? 'changes every 16 bars and with each song' : STYLES[SET.style].after,
+    change: d => { SET.style = (SET.style + d + AUTO + 1) % (AUTO + 1); if (SET.style !== AUTO) S.active = SET.style; choosePalette(); } },
+  { label: 'Colours', get: () => PAL_OPTS[SET.pal], sub: () => SET.pal === 0 ? STYLES[currentStyle()].pal : SET.pal === 1 ? 'calm songs cool, fast songs hot' : '',
+    change: d => { SET.pal = (SET.pal + d + PAL_OPTS.length) % PAL_OPTS.length; choosePalette(); } },
+  { label: 'Beat strength', get: () => STRENGTHS[SET.strength][0], sub: () => '',
+    change: d => { SET.strength = Math.min(2, Math.max(0, SET.strength + d)); } },
+  { label: 'Beat offset', get: () => SET.latency + ' ms', sub: () => 'raise if flashes come before the beat',
+    change: d => { SET.latency += d * 50; } },
+  { label: 'Song card', get: () => CARD_OPTS[SET.card], sub: () => '',
+    change: d => { SET.card = (SET.card + d + 3) % 3; $('card').classList.remove('show', 'dim'); updateCard(); } }
+];
+function renderMenu() {
+  $('rows').innerHTML = ROWS.map((r, i) =>
+    `<div class="row${i === menuRow ? ' sel' : ''}"><span>${r.label}</span><span class="v">${r.get()}${r.sub() ? '<small>' + r.sub() + '</small>' : ''}</span></div>`).join('');
+}
+function menuOpen() { return $('menu').classList.contains('show'); }
+function quickToast() {
+  const name = styleName(SET.style);
+  toast(name + ' · ' + PAL_OPTS[SET.pal], 2500, SET.style === AUTO ? '' : STYLES[SET.style].after);
+}
+function toast(msg, ms = 2500, sub = '') {
+  const t = $('toast'); t.innerHTML = ''; t.textContent = msg;
+  if (sub) { const s = document.createElement('small'); s.textContent = sub; t.appendChild(s); }
+  t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), ms);
+}
 addEventListener('keydown', e => {
   if ($('setup').style.display === 'flex') return;
-  switch (e.key) {
-    case 'ArrowRight': case 'ArrowLeft':
-      S.mode = (S.mode + (e.key === 'ArrowRight' ? 1 : MODES.length - 1)) % MODES.length; SS('mode', S.mode);
-      toast(MODES[S.mode]); break;
-    case 'ArrowUp': case 'ArrowDown':
-      S.latency += e.key === 'ArrowUp' ? 50 : -50; SS('lat', S.latency);
-      toast('Beat offset ' + S.latency + ' ms'); break;
-    case 'Enter': case ' ':
-      $('info').classList.contains('show') ? $('info').classList.remove('show') : showInfo(0); break;
+  const k = e.key;
+  if (menuOpen()) {
+    if (k === 'ArrowUp') menuRow = (menuRow + ROWS.length - 1) % ROWS.length;
+    else if (k === 'ArrowDown') menuRow = (menuRow + 1) % ROWS.length;
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') { ROWS[menuRow].change(k === 'ArrowRight' ? 1 : -1); saveSet(); }
+    else if (k === 'Enter' || k === ' ' || k === 'Escape' || k === 'Backspace' || k === 'GoBack' || k === 'BrowserBack') { $('menu').classList.remove('show'); }
+    else return;
+    if (menuOpen()) renderMenu();
+    e.preventDefault(); return;
+  }
+  switch (k) {
+    case 'ArrowRight': case 'ArrowLeft': ROWS[0].change(k === 'ArrowRight' ? 1 : -1); saveSet(); quickToast(); break;
+    case 'ArrowUp': case 'ArrowDown': ROWS[1].change(k === 'ArrowUp' ? 1 : -1); saveSet(); quickToast(); break;
+    case 'Enter': case ' ': menuRow = 0; renderMenu(); $('menu').classList.add('show'); break;
     case 'p': case 'P': showPair(); break;
     case 'r': case 'R': location.href = REDIRECT + '?reset'; break;
     default: return;
@@ -360,7 +505,7 @@ addEventListener('keydown', e => {
   e.preventDefault();
 });
 
-/* ---------- pairing: log in on a laptop, hand the token to the projector ---------- */
+/* ---------- pairing ---------- */
 function showPair() {
   if (!LS('rt')) return toast('Not logged in');
   $('pairlink').value = REDIRECT + '#pair=' + encodeURIComponent(LS('rt')) + '&cid=' + encodeURIComponent(LS('cid'));
@@ -374,10 +519,7 @@ function consumePair() {
   history.replaceState(null, '', REDIRECT);
 }
 
-/* ---------- wake lock (stop the screensaver where the browser allows it) ---------- */
-async function keepAwake() {
-  try { if ('wakeLock' in navigator) { await navigator.wakeLock.request('screen'); } } catch (e) {}
-}
+async function keepAwake() { try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) {} }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) keepAwake(); });
 
 /* ---------- boot ---------- */
@@ -390,21 +532,24 @@ $('login').onclick = () => { const v = $('cid').value.trim(); if (!v) { $('err')
 $('demo').onclick = () => { location.href = REDIRECT + '?demo'; };
 
 async function boot() {
-  if (new URLSearchParams(location.search).has('reset')) {
+  const q = new URLSearchParams(location.search);
+  if (q.has('reset')) {
     try { Object.keys(localStorage).filter(k => k.startsWith('vibe.')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
     history.replaceState(null, '', REDIRECT);
   }
+  if (q.has('style')) { SET.style = Math.min(AUTO, Math.max(0, +q.get('style'))); }
   if (!initGL()) return;
   resize(); addEventListener('resize', resize);
+  S.active = SET.style === AUTO ? 0 : SET.style; choosePalette();
   requestAnimationFrame(frame);
   keepAwake();
-  if (DEMO) { document.body.classList.add('run'); startDemo(); return; }
+  if (DEMO) { document.body.classList.add('run'); startDemo(); quickToast(); return; }
   consumePair();
-  const code = new URLSearchParams(location.search).get('code');
+  const code = q.get('code');
   try { if (code) await finishLogin(code); } catch (e) { return showSetup('Login failed: ' + e.message); }
   if (!LS('rt')) return showSetup();
   document.body.classList.add('run');
-  toast('←/→ style · ↑/↓ beat offset · OK track info', 6000);
+  toast('◀▶ style · ▲▼ colours · OK menu', 6000);
   poll();
 }
 boot();
