@@ -164,7 +164,15 @@ const PALETTES = {
   'Ember':          ['#140607','#4a1416','#b23a1f','#e07a2b','#f2c27b'],
   'Forest':         ['#03110b','#0f3b2c','#2f7d5b','#9cc69b','#eef6e8'],
   'Caracas':        ['#101010','#e63946','#2a9d8f','#f4a261','#3d5a80'],
-  'Deep ocean':     ['#020617','#0e3a5c','#2b8ab8','#7fd3e6','#f2fbff']
+  'Deep ocean':     ['#020617','#0e3a5c','#2b8ab8','#7fd3e6','#f2fbff'],
+  'Ink and paper':  ['#ece4d4','#1c1814','#9aa3a8','#8c3b2b','#3b3430'],
+  'Gold weave':     ['#0d0904','#c8962e','#6b4a12','#b2332a','#efd9a0'],
+  'Skyspace':       ['#05060c','#2a1b5e','#d1477a','#f08a4b','#7fc8f8'],
+  'Albers':         ['#1c1a17','#c9502e','#e8a53c','#f2d06b','#f7ecd0'],
+  'Phosphor':       ['#000000','#0b3d20','#21c46b','#7dffb2','#e6fff0'],
+  'Bloom':          ['#020208','#1b3a8a','#e94f9c','#5ee0d0','#fff4c2'],
+  'Wall drawing':   ['#f3efe6','#d7263d','#f4b400','#1b6ac9','#1d1d1d'],
+  'Desert':         ['#1a0f0a','#c1440e','#e9a03b','#f1d6a4','#2f6f73']
 };
 const ENERGY_PALS = [['Nordic dusk','Forest','Ember'], ['Temple pastel','Deep ocean','Caracas'], ['Tokyo neon','Bauhaus','Infinity red']];
 const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
@@ -180,6 +188,7 @@ float noise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
  return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x),u.y);}
 float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
 vec3 pal(float t){t=fract(t)*4.;return t<1.?mix(uC1,uC2,t):t<2.?mix(uC2,uC3,t-1.):t<3.?mix(uC3,uC4,t-2.):mix(uC4,uC1,t-3.);}
+float ss(float a,float b,float x){return a<b?smoothstep(a,b,x):1.-smoothstep(b,a,x);}
 vec3 pick(float h){return h<.25?uC1:h<.5?uC2:h<.75?uC3:uC4;}
 vec3 scene(vec2 uv,vec2 fc);
 void main(){vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;vec3 c=scene(uv,gl_FragCoord.xy);
@@ -227,9 +236,9 @@ vec3 scene(vec2 uv,vec2 fc){
 vec3 scene(vec2 uv,vec2 fc){
  float n=(fbm(uv*3.+uT*.05)-.5)*.08;
  float e=.035+.03*uKick;
- float bx=smoothstep(.64+e,.64-e,abs(uv.x)+n);
- float top=smoothstep(.41+e,.41-e,uv.y+n)*smoothstep(.03-e,.03+e,uv.y-n);
- float bot=smoothstep(-.03+e,-.03-e,uv.y+n)*smoothstep(-.41-e,-.41+e,uv.y-n);
+ float bx=ss(.64+e,.64-e,abs(uv.x)+n);
+ float top=ss(.41+e,.41-e,uv.y+n)*smoothstep(.03-e,.03+e,uv.y-n);
+ float bot=ss(-.03+e,-.03-e,uv.y+n)*smoothstep(-.41-e,-.41+e,uv.y-n);
  float br=1.+.14*uKick+.3*uPhrase;
  vec3 c=mix(uC1*.55,uC3*br,bx*top);
  c=mix(c,uC2*br,bx*bot);
@@ -259,7 +268,7 @@ vec3 scene(vec2 uv,vec2 fc){
  float ph=r*6.5-push*.5+smoothstep(0.,.2,r)*(.12*sin(a*3.+uT*.3)+.05*sin(a*5.-uT*.2));
  float idx=floor(ph),f=fract(ph);
  vec3 c=pick(h1(idx*1.37)*.999);
- float edge=smoothstep(0.,.05,f)*smoothstep(1.,.95,f);
+ float edge=smoothstep(0.,.05,f)*ss(1.,.95,f);
  c=mix(uC0,c,edge);
  return c*(1.+.12*uKick);}` },
   { name: 'Chromatic lines', after: 'after Carlos Cruz-Diez (VE)', pal: 'Caracas', fs: `
@@ -291,7 +300,152 @@ vec3 scene(vec2 uv,vec2 fc){
  vec3 c=mix(uC1,uC3,rings);
  c=mix(c,uC2,spokes*.55);
  c*=smoothstep(0.,.45,r)*(1.+.45*uKick);
- return c+uC4*exp(-r*7.)*uKick;}` }
+ return c+uC4*exp(-r*7.)*uKick;}` },  { name: 'Ink', after: 'after Zao Wou-Ki (CN/FR)', pal: 'Ink and paper', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 q=vec2(fbm(uv*1.2+uT*.05),fbm(uv*1.2+vec2(3.1,1.7)-uT*.04));
+ float n=fbm(uv*1.8+q*1.6+uT*.03);
+ float bl=uKick*.1;
+ float ink=smoothstep(.47-bl,.62-bl,n);
+ float wash=smoothstep(.3,.7,fbm(uv*3.-q+uT*.02));
+ vec3 c=mix(uC0,uC2,wash*.35);
+ c=mix(c,mix(uC4,uC1,smoothstep(.62,.8,n)),ink);
+ c=mix(c,uC3,smoothstep(.68,.72,fbm(uv*4.+q*2.))*.5*(.4+uKick));
+ return c;}` },
+  { name: 'Metal weave', after: 'after El Anatsui (GH/NG)', pal: 'Gold weave', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 g=uv*vec2(13.,21.);
+ g.x+=.5*mod(floor(g.y),2.);
+ vec2 id=floor(g),f=fract(g);
+ float h=hash(id);
+ float wave=.5+.5*sin(id.x*.35+id.y*.22-uBeat*PI*.5);
+ float sheen=pow(.5+.5*sin(h*6.28+uT*.6+fbm(id*.15+uT*.05)*6.),3.);
+ vec3 c=h<.55?uC1:h<.75?uC2:h<.9?uC3:uC4;
+ c*=.5+.6*sheen+.45*uKick*wave;
+ float e=min(min(f.x,1.-f.x),min(f.y,1.-f.y));
+ return mix(uC0,c,smoothstep(.03,.1,e));}` },
+  { name: 'Light aperture', after: 'after James Turrell (US)', pal: 'Skyspace', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 d=abs(uv)-vec2(.48,.28);
+ float box=length(max(d,0.))+min(max(d.x,d.y),0.)-.06;
+ vec3 inC=pal(uT*.012+uBar*.008);
+ vec3 outC=pal(uT*.012+.5)*.5;
+ float m=1.-smoothstep(-.012,.012,box);
+ vec3 c=mix(outC,inC*(1.+.12*uKick+.3*uPhrase),m);
+ c+=inC*exp(-max(box,0.)*8.)*.3*(1.-m);
+ return c;}` },
+  { name: 'Nested squares', after: 'after Josef Albers (DE/US)', pal: 'Albers', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec3 c=uC0;float s=floor(uBar);
+ for(int i=0;i<4;i++){
+  float fi=float(i);float hs=.45-fi*.105;vec2 d=abs(uv-vec2(0.,-.055*fi));
+  float k=mod(fi+s,4.);
+  vec3 col=k<1.?uC1:k<2.?uC2:k<3.?uC3:uC4;
+  c=mix(c,col*(fi>2.5?1.+.3*uKick:1.+.06*uKick),step(max(d.x,d.y),hs));
+ }
+ return c;}` },
+  { name: 'Lissajous', after: 'after John Whitney (US) and early computer art', pal: 'Phosphor', fs: `
+vec2 LP(float t,float a,float b){return vec2(sin(a*t+uT*.3),sin(b*t))*vec2(.66,.42)*(1.+.1*uKick);}
+vec3 scene(vec2 uv,vec2 fc){
+ float a=2.+mod(floor(uBar/4.),4.),b=a+1.+mod(floor(uBar/8.),2.);
+ float md=10.;vec2 pv=LP(0.,a,b);
+ for(int i=1;i<=80;i++){
+  vec2 pn=LP(float(i)/80.*2.*PI,a,b);
+  vec2 pa=uv-pv,ba=pn-pv;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);
+  md=min(md,length(pa-ba*h));pv=pn;
+ }
+ float px=1./uRes.y;
+ float core=1.-smoothstep(px,px*3.,md);
+ float glow=.012/(md+.012);
+ return uC0+uC4*core*(.7+.5*uKick)+uC2*glow*(.35+.5*uKick);}` },
+  { name: 'Moiré', after: 'after Jesús Rafael Soto (VE)', pal: 'Riley mono', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float rot=uT*.04+(floor(uBeat)+(1.-exp(-fract(uBeat)*6.)))*.015;
+ vec2 q=mat2(cos(rot),-sin(rot),sin(rot),cos(rot))*uv;
+ float l1=step(.5,fract(uv.x*38.));
+ float l2=step(.5,fract(q.x*38.+.2*sin(q.y*2.+uT*.1)));
+ float m=l1*l2+(1.-l1)*(1.-l2);
+ vec3 c=mix(uC0,uC4,m);
+ float sq=step(max(abs(uv.x-.35*sin(uT*.1)),abs(uv.y)),.17);
+ c=mix(c,mix(uC0,uC2,m),sq);
+ return c*(1.+.1*uKick);}` },
+  { name: 'Light rain', after: 'after teamLab (JP)', pal: 'Bloom', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 p=fc/uRes.y;
+ float cols=55.;float cx=floor(p.x*cols);float h=hash(vec2(cx,1.));
+ float y=fract(p.y*.6+uT*(.3+h*.7)*.6+h);
+ float streak=pow(y,7.)*(1.-smoothstep(.15,.5,abs(fract(p.x*cols)-.5)));
+ vec3 c=uC0+pick(h)*streak*1.1;
+ vec2 g=uv*3.;vec2 id=floor(g);vec2 f=fract(g)-.5;float hb=hash(id+floor(uBar));
+ float pet=.6+.4*cos(atan(f.y,f.x)*5.+hb*6.);
+ float bloom=(1.-smoothstep(0.,.3*pet,length(f)))*step(.55,hb)*uKick;
+ return c+pick(fract(hb*3.))*bloom;}` },
+  { name: 'Wall drawing', after: 'after Sol LeWitt (US)', pal: 'Wall drawing', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec2 p=fc/uRes*vec2(4.,3.);vec2 id=floor(p),f=fract(p);
+ float h=hash(id+floor(uBar/4.)*3.);
+ float kind=floor(h*4.);
+ float v=kind<1.?f.x:kind<2.?f.y:kind<3.?(f.x+f.y)*.7:length(f)*.9;
+ float lines=step(.5,fract(v*10.));
+ vec3 col=pick(fract(h*7.)*.75);
+ float lit=step(.72,hash(id+floor(uBeat)));
+ vec3 c=mix(uC0,col,lines*(.8+.2*lit+.3*lit*uKick));
+ float e=min(min(f.x,1.-f.x),min(f.y,1.-f.y));
+ return mix(uC4,c,step(.012,e));}` },
+  { name: 'Mesas', after: 'after Georgia O’Keeffe (US) and Etel Adnan (LB)', pal: 'Desert', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec3 c=mix(uC3,uC2,smoothstep(-.1,.5,uv.y));
+ vec2 sp=vec2(.35,.18);float sr=.13*(1.+.08*uKick);
+ c=mix(c,uC1,1.-smoothstep(sr,sr+.006,length(uv-sp)));
+ for(int i=0;i<3;i++){
+  float fi=float(i);
+  float hgt=-.05-fi*.13+.09*fbm(vec2(uv.x*(1.5+fi)+fi*7.+uT*.01*(fi+1.),fi))+.03*step(.5,fract(uv.x*.8+fi*.3))*(1.-fi*.3);
+  vec3 lc=fi<.5?uC1*.8:fi<1.5?uC4:uC0;
+  c=mix(c,lc*(1.+.1*uKick*(2.-fi)),step(uv.y,hgt));
+ }
+ return c;}` },
+  { name: 'Kaleidoscope', after: 'after Kaleidosync and classic VJ mirrors', pal: 'Bloom', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float r=length(uv),a=atan(uv.y,uv.x);
+ float seg=2.*PI/6.;
+ a=mod(a+uT*.05,seg);a=abs(a-seg*.5);
+ vec2 p=vec2(cos(a),sin(a))*r*(1.-.12*uKick);
+ float f=fbm(p*3.+vec2(uT*.2,-uT*.07));
+ float bands=fract(f*3.+uBeat*.25);
+ vec3 c=pal(f*1.5+uBar*.05)*(.45+.55*smoothstep(0.,.15,bands));
+ return mix(uC0,c,smoothstep(.15,.5,f+.2*uKick));}` },
+  { name: 'Synthwave', after: 'retro outrun visuals', pal: 'Tokyo neon', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ float hz=-.04;
+ vec3 c=mix(uC1*.8,uC0,smoothstep(hz,.55,uv.y));
+ vec2 sp=uv-vec2(0.,.1);float sr=.27*(1.+.05*uKick);
+ float sun=1.-smoothstep(sr,sr+.004,length(sp));
+ float cut=step(0.,sin(sp.y*55.-uT*1.5)+(sp.y+.08)*14.);
+ c=mix(c,mix(uC2,uC4,smoothstep(-.2,.25,sp.y)),sun*cut*step(hz,uv.y));
+ if(uv.y<hz){
+  float d=hz-uv.y,z=.25/d,x=uv.x*z,px=1.5/uRes.y;
+  float lunge=floor(uBeat)+(1.-exp(-fract(uBeat)*6.));
+  float gz=fract(z*2.+lunge),gx=fract(x*4.);
+  float wz=min(.45,z*z/.25*px*2.),wx=min(.45,z*px*4.);
+  float line=max(1.-smoothstep(wz*.5,wz*1.5,min(gz,1.-gz)),1.-smoothstep(wx*.5,wx*1.5,min(gx,1.-gx)));
+  c=uC0+uC3*line*(.55+.45*uKick)*min(1.,d*6.)+uC2*exp(-d*30.)*.6;
+ }
+ return c;}` },
+  { name: 'Starfield', after: 'Winamp-era screensavers', pal: 'Deep ocean', fs: `
+vec3 scene(vec2 uv,vec2 fc){
+ vec3 c=uC0*1.;
+ float lunge=floor(uBeat)+(1.-exp(-fract(uBeat)*5.));
+ for(int L=0;L<4;L++){
+  float fl=float(L);
+  float dp=fract(fl*.25+lunge*.06+uT*.02);
+  float sc=mix(16.,1.8,dp);
+  vec2 g=uv*sc+fl*7.3;vec2 id=floor(g),f=fract(g)-.5;
+  float h=hash(id+fl*3.);
+  vec2 o=vec2(hash(id+1.3),hash(id+2.7))-.5;
+  float d=length(f-o*.6);
+  float st=(1.-smoothstep(0.,.04+.07*dp,d))*step(.55,h)*dp*(1.-dp)*4.;
+  c+=pick(h)*st*(.8+.8*uKick);
+ }
+ return c+uC2*.15*uPhrase;}` }
 ];
 const AUTO = STYLES.length; // index for "Auto"
 const styleName = i => i === AUTO ? 'Auto' : STYLES[i].name;
@@ -301,12 +455,12 @@ const PAL_OPTS = ['Style default', 'Follow song energy', ...Object.keys(PALETTES
 const STRENGTHS = [['Subtle', .45], ['Medium', .75], ['Strong', 1]];
 const CARD_OPTS = ['Bottom left', 'Bottom right', 'Off'];
 const SET = {
-  style: +(LS('style') ?? AUTO), pal: +(LS('pal') ?? 0), strength: +(LS('strength') ?? 2),
+  style: (() => { const n = LS('styleName'); const i = STYLES.findIndex(x => x.name === n); return n === 'Auto' || i < 0 ? AUTO : i; })(), pal: +(LS('pal') ?? 0), strength: +(LS('strength') ?? 2),
   card: +(LS('card') ?? 0), latency: +(LS('lat') ?? 250)
 };
 if (!(SET.style >= 0 && SET.style <= AUTO)) SET.style = AUTO;
 if (!(SET.pal >= 0 && SET.pal < PAL_OPTS.length)) SET.pal = 0;
-const saveSet = () => { SS('style', SET.style); SS('pal', SET.pal); SS('strength', SET.strength); SS('card', SET.card); SS('lat', SET.latency); };
+const saveSet = () => { SS('styleName', styleName(SET.style)); SS('pal', SET.pal); SS('strength', SET.strength); SS('card', SET.card); SS('lat', SET.latency); };
 
 /* ---------- state ---------- */
 const S = {
