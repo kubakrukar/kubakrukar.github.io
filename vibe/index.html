@@ -53,7 +53,7 @@ canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
 const LS = k => { try { return localStorage.getItem('vibe.' + k); } catch (e) { return null; } };
 const SS = (k, v) => { try { v == null ? localStorage.removeItem('vibe.' + k) : localStorage.setItem('vibe.' + k, v); } catch (e) {} };
 const $ = id => document.getElementById(id);
-const REDIRECT = location.origin + location.pathname;
+const REDIRECT = location.origin + location.pathname.replace(/index\.html$/, '');
 const SCOPES = 'user-read-currently-playing user-read-playback-state';
 const DEMO = new URLSearchParams(location.search).has('demo');
 
