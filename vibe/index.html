@@ -48,14 +48,14 @@ canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
   <button id="pairdone">Done, log this browser out</button>
 </div>
 <div id="setup"><div>
-  <h1>Vibe: one-time setup</h1>
-  <p>1. Go to <code>developer.spotify.com/dashboard</code>, create an app (any name), tick <b>Web API</b>.</p>
-  <p>2. Add this exact Redirect URI to the app:<br><code id="redir"></code></p>
-  <p>3. Paste the app's Client ID here:</p>
-  <input id="cid" placeholder="Client ID" autocomplete="off" spellcheck="false">
+  <h1>Vibe</h1>
   <button id="login">Log in with Spotify</button>
   <button id="demo" class="alt">Try demo</button>
   <p id="err" style="color:#f88"></p>
+  <details style="margin-top:28px;opacity:.7"><summary>Use a different Spotify app</summary>
+  <p>Redirect URI to register: <code id="redir"></code></p>
+  <input id="cid" placeholder="Client ID" autocomplete="off" spellcheck="false">
+  </details>
 </div></div>
 
 <script>
@@ -65,6 +65,7 @@ const LS = k => { try { return localStorage.getItem('vibe.' + k); } catch (e) { 
 const SS = (k, v) => { try { v == null ? localStorage.removeItem('vibe.' + k) : localStorage.setItem('vibe.' + k, v); } catch (e) {} };
 const $ = id => document.getElementById(id);
 const REDIRECT = location.origin + location.pathname.replace(/index\.html$/, '');
+const DEFAULT_CID = '888dd43e0e5d467a94cf99131afdca6c';
 const SCOPES = 'user-read-currently-playing user-read-playback-state';
 const DEMO = new URLSearchParams(location.search).has('demo');
 
@@ -106,7 +107,7 @@ async function accessToken() {
   if (LS('at') && Date.now() < +LS('exp')) return LS('at');
   if (!LS('rt')) throw new Error('nologin');
   try {
-    saveTokens(await tokenRequest({ grant_type: 'refresh_token', refresh_token: LS('rt'), client_id: LS('cid') }));
+    saveTokens(await tokenRequest({ grant_type: 'refresh_token', refresh_token: LS('rt'), client_id: LS('cid') || DEFAULT_CID }));
   } catch (e) {
     if (e.code === 'invalid_grant') { SS('rt', null); SS('at', null); }
     throw e;
@@ -680,9 +681,9 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) keep
 function showSetup(msg) {
   document.body.classList.remove('run');
   $('setup').style.display = 'flex'; $('redir').textContent = REDIRECT;
-  $('cid').value = LS('cid') || ''; $('err').textContent = msg || '';
+  $('cid').value = LS('cid') || DEFAULT_CID; setTimeout(() => $('login').focus(), 50); $('err').textContent = msg || '';
 }
-$('login').onclick = () => { const v = $('cid').value.trim(); if (!v) { $('err').textContent = 'Client ID needed.'; return; } startLogin(v); };
+$('login').onclick = () => { startLogin($('cid').value.trim() || DEFAULT_CID); };
 $('demo').onclick = () => { location.href = REDIRECT + '?demo'; };
 
 async function boot() {
