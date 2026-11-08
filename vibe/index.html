@@ -354,6 +354,7 @@ addEventListener('keydown', e => {
     case 'Enter': case ' ':
       $('info').classList.contains('show') ? $('info').classList.remove('show') : showInfo(0); break;
     case 'p': case 'P': showPair(); break;
+    case 'r': case 'R': location.href = REDIRECT + '?reset'; break;
     default: return;
   }
   e.preventDefault();
@@ -389,6 +390,10 @@ $('login').onclick = () => { const v = $('cid').value.trim(); if (!v) { $('err')
 $('demo').onclick = () => { location.href = REDIRECT + '?demo'; };
 
 async function boot() {
+  if (new URLSearchParams(location.search).has('reset')) {
+    try { Object.keys(localStorage).filter(k => k.startsWith('vibe.')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+    history.replaceState(null, '', REDIRECT);
+  }
   if (!initGL()) return;
   resize(); addEventListener('resize', resize);
   requestAnimationFrame(frame);
