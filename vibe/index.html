@@ -437,7 +437,7 @@ vec3 scene(vec2 uv,vec2 fc){
  float lunge=floor(uBeat)+(1.-exp(-fract(uBeat)*5.));
  for(int L=0;L<4;L++){
   float fl=float(L);
-  float dp=fract(fl*.25+lunge*.06+uT*.02);
+  float dp=fract(fl*.25+lunge*.1+uT*.09);
   float sc=mix(16.,1.8,dp);
   vec2 g=uv*sc+fl*7.3;vec2 id=floor(g),f=fract(g)-.5;
   float h=hash(id+fl*3.);
@@ -455,13 +455,15 @@ const styleName = i => i === AUTO ? 'Auto' : STYLES[i].name;
 const PAL_OPTS = ['Style default', 'Follow song energy', ...Object.keys(PALETTES)];
 const STRENGTHS = [['Subtle', .45], ['Medium', .75], ['Strong', 1]];
 const CARD_OPTS = ['Bottom left', 'Bottom right', 'Off'];
+const SPEEDS = [['Slow', .6], ['Normal', 1], ['Fast', 1.7], ['Very fast', 2.6]];
+const QUALITY = [['Low (smoothest)', .33], ['Medium', .5], ['High', .75]];
 const SET = {
   style: (() => { const n = LS('styleName'); const i = STYLES.findIndex(x => x.name === n); return n === 'Auto' || i < 0 ? AUTO : i; })(), pal: +(LS('pal') ?? 0), strength: +(LS('strength') ?? 2),
-  card: +(LS('card') ?? 0), latency: +(LS('lat') ?? 250)
+  card: +(LS('card') ?? 0), latency: +(LS('lat') ?? 250), speed: +(LS('speed') ?? 1), quality: +(LS('quality') ?? 1)
 };
 if (!(SET.style >= 0 && SET.style <= AUTO)) SET.style = AUTO;
 if (!(SET.pal >= 0 && SET.pal < PAL_OPTS.length)) SET.pal = 0;
-const saveSet = () => { SS('styleName', styleName(SET.style)); SS('pal', SET.pal); SS('strength', SET.strength); SS('card', SET.card); SS('lat', SET.latency); };
+const saveSet = () => { SS('styleName', styleName(SET.style)); SS('pal', SET.pal); SS('strength', SET.strength); SS('card', SET.card); SS('lat', SET.latency); SS('speed', SET.speed); SS('quality', SET.quality); };
 
 /* ---------- state ---------- */
 const S = {
@@ -565,8 +567,8 @@ function initGL() {
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
   return true;
 }
-const SCALE = +(new URLSearchParams(location.search).get('scale') || LS('scale') || 0.5);
 function resize() {
+  const SCALE = QUALITY[SET.quality][1];
   canvas.width = Math.round(innerWidth * SCALE); canvas.height = Math.round(innerHeight * SCALE);
   gl.viewport(0, 0, canvas.width, canvas.height);
 }
@@ -595,7 +597,7 @@ function frame(now) {
     S.lastAutoBar = bar; setActive((S.active + 1 + (S.seed % (STYLES.length - 1))) % STYLES.length);
   }
   const tempo = S.bpm ? S.bpm / 120 : .7;
-  S.flow += dt * (S.playing ? (.15 + .35 * tempo * (.4 + S.energy)) : .03);
+  S.flow += dt * SPEEDS[SET.speed][1] * (S.playing ? (.15 + .35 * tempo * (.4 + S.energy)) : .03);
 
   let P;
   try { P = compile(currentStyle()); } catch (e) { toast('Style failed: ' + e.message); SET.style = AUTO; S.active = 0; P = compile(0); }
@@ -616,6 +618,10 @@ const ROWS = [
     change: d => { SET.style = (SET.style + d + AUTO + 1) % (AUTO + 1); if (SET.style !== AUTO) S.active = SET.style; choosePalette(); } },
   { label: 'Colours', get: () => PAL_OPTS[SET.pal], sub: () => SET.pal === 0 ? STYLES[currentStyle()].pal : SET.pal === 1 ? 'calm songs cool, fast songs hot' : '',
     change: d => { SET.pal = (SET.pal + d + PAL_OPTS.length) % PAL_OPTS.length; choosePalette(); } },
+  { label: 'Speed', get: () => SPEEDS[SET.speed][0], sub: () => 'how fast shapes drift between beats',
+    change: d => { SET.speed = Math.min(3, Math.max(0, SET.speed + d)); } },
+  { label: 'Quality', get: () => QUALITY[SET.quality][0], sub: () => 'lower if motion stutters',
+    change: d => { SET.quality = Math.min(2, Math.max(0, SET.quality + d)); resize(); } },
   { label: 'Beat strength', get: () => STRENGTHS[SET.strength][0], sub: () => '',
     change: d => { SET.strength = Math.min(2, Math.max(0, SET.strength + d)); } },
   { label: 'Beat offset', get: () => SET.latency + ' ms', sub: () => 'raise if flashes come before the beat',
